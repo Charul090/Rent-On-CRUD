@@ -1,5 +1,5 @@
 import unittest
-from ..services import register
+from app.main.services.user import register
 
 
 class RegisterTest(unittest.TestCase):
