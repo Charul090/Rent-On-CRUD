@@ -9,5 +9,3 @@ def registerUser():
     response = register(request.json)
 
     return response
-
-    
