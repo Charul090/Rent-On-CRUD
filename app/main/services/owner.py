@@ -81,3 +81,27 @@ def login(details):
                                    "You have entered the wrong password!"})
 
     return json.dumps({"error": True, "message": "Unknown error!"})
+
+
+def add_property(details):
+    try:
+        area = details["area"]
+        amenities = details["amenities"]
+        bedrooms = details["bedrooms"]
+        furnishing = details["furnishing"]
+        address = details["address"]
+        price = details["price"]
+
+    except KeyError:
+        return False
+
+    if area == "" or amenities == "" or bedrooms == "" or furnishing == "" or \
+       address == "" or price == "":
+        return False
+
+    if type(area) is not int or type(bedrooms) is not int or \
+       type(furnishing) is not bool \
+       or type(address) is not str or type(price) is not int:
+        return False
+
+    return True
