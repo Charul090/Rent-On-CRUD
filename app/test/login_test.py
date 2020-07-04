@@ -1,5 +1,6 @@
 import unittest
-from ..main.services.user import login
+from ..main.services.user import login as user_login
+from ..main.services.owner import login as owner_login
 
 
 class LoginTest(unittest.TestCase):
@@ -11,7 +12,8 @@ class LoginTest(unittest.TestCase):
             "password": "hia"
         }
 
-        self.assertTrue(login(obj))
+        # self.assertTrue(user_login(obj))
+        self.assertTrue(owner_login(obj))
 
     def test_login_error(self):
 
@@ -19,7 +21,8 @@ class LoginTest(unittest.TestCase):
             "password": "hia"
         }
 
-        self.assertFalse(login(obj))
+        # self.assertFalse(user_login(obj))
+        self.assertFalse(owner_login(obj))
 
     def test_login_type(self):
 
@@ -28,4 +31,5 @@ class LoginTest(unittest.TestCase):
             "password": 123
         }
 
-        self.assertFalse(login(obj))
+        # self.assertFalse(user_login(obj))
+        self.assertFalse(owner_login(obj))

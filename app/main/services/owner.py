@@ -37,3 +37,19 @@ def register(details):
                            "message": "User registered successfully"})
 
     return {"error": True, "message": "Email already exists"}
+
+
+def login(details):
+    try:
+        email = details["email"]
+        password = details["password"]
+    except KeyError:
+        return False
+
+    if email == "" or password == "":
+        return False
+
+    if type(email) is not str and type(password) is not str:
+        return False
+
+    return True
