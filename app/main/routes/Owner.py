@@ -1,6 +1,6 @@
 from . import owner
 from flask import request
-from ..services.owner import register, login
+from ..services.owner import register, login, add_property
 
 
 @owner.route("/register", methods=["POST"])
@@ -15,5 +15,15 @@ def registerOwner():
 def loginOwner():
 
     response = login(request.json)
+
+    return response
+
+
+@owner.route("/add", methods=["POST"])
+def addProperty():
+
+    token = request.headers.get("Auth")
+
+    response = add_property(request.json, token)
 
     return response
