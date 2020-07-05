@@ -65,3 +65,18 @@ def login(details):
                                "You have entered the wrong password!"})
 
     return json.dumps({"error": True, "message": "Unknown error!"})
+
+
+def rent(details):
+    try:
+        property_id = details["property_id"]
+        time = details["time"]
+        duration = details["duration"]
+    except KeyError:
+        return False
+
+    if type(property_id) is not int or type(time) is not str or \
+       type(duration) is not int:
+        return False
+
+    return True

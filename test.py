@@ -3,7 +3,8 @@ import unittest
 # from app.test.register_test import RegisterTest
 # from app.test.add_test import AddPropertyTest
 # from app.test.delete_test import DeletePropertyTest
-from app.test.update_test import UpdatePropertyTest
+# from app.test.update_test import UpdatePropertyTest
+from app.test.rent_test import RentPropertyTest
 
 if __name__ == '__main__':
     unittest.main()
