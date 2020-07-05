@@ -130,13 +130,24 @@ def add_property(details, token):
                        "message": "Property added successfully!"})
 
 
-def delete_property(details):
+def delete_property(details, token):
     try:
         id = details["id"]
     except KeyError:
-        return False
+        return json.dumps({"error": True,
+                           "message": "One or more fields are missing!"})
 
     if type(id) is not int:
-        return False
+        return json.dumps({"error": True, "message": "Wrong data format!"})
 
-    return True
+    status, data = check_auth_token(token)
+
+    if status is False or data["type"] == "user":
+        return json.dumps({"error": True,
+                           "message": "User does not have authorization!"})
+
+    delete_data = PropertyModel.query.filter(PropertyModel.id == id).delete()
+    db.session.commit()
+
+    return json.dumps({"error": False,
+                       "message": "Property deleted successfully!"})
