@@ -128,3 +128,15 @@ def add_property(details, token):
 
     return json.dumps({"error": False,
                        "message": "Property added successfully!"})
+
+
+def delete_property(details):
+    try:
+        id = details["id"]
+    except KeyError:
+        return False
+
+    if type(id) is not int:
+        return False
+
+    return True
