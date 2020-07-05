@@ -151,3 +151,29 @@ def delete_property(details, token):
 
     return json.dumps({"error": False,
                        "message": "Property deleted successfully!"})
+
+
+def update_property(details):
+    try:
+        area = details["area"]
+        amenities = details["amenities"]
+        bedrooms = details["bedrooms"]
+        furnishing = details["furnishing"]
+        address = details["address"]
+        price = details["price"]
+        id = details["id"]
+
+    except KeyError:
+        return False
+
+    if area == "" or amenities == "" or bedrooms == "" or furnishing == "" or \
+       address == "" or price == "" or id == "":
+        return False
+
+    if type(area) is not int or type(bedrooms) is not int or \
+       type(furnishing) is not bool \
+       or type(address) is not str or type(price) is not int or \
+       type(id) is not int:
+        return False
+
+    return True
