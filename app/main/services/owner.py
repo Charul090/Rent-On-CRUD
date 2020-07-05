@@ -146,14 +146,19 @@ def delete_property(details, token):
         return json.dumps({"error": True,
                            "message": "User does not have authorization!"})
 
-    delete_data = PropertyModel.query.filter(PropertyModel.id == id).delete()
-    db.session.commit()
+    delete_data = PropertyModel.query.filter(PropertyModel.id == id).first()
 
-    return json.dumps({"error": False,
-                       "message": "Property deleted successfully!"})
+    if delete_data is None:
+        return json.dumps({"error": True,
+                           "message": "Property does not exist!"})
+    else:
+        delete_data.delete()
+        db.session.commit()
+        return json.dumps({"error": False,
+                           "message": "Property deleted successfully!"})
 
 
-def update_property(details):
+def update_property(details, token):
     try:
         area = details["area"]
         amenities = details["amenities"]
@@ -164,16 +169,40 @@ def update_property(details):
         id = details["id"]
 
     except KeyError:
-        return False
+        return json.dumps({"error": True,
+                           "message": "One or more fields are missing!"})
 
     if area == "" or amenities == "" or bedrooms == "" or furnishing == "" or \
        address == "" or price == "" or id == "":
-        return False
+        return json.dumps({"error": True, "message": "Empty Fields"})
 
     if type(area) is not int or type(bedrooms) is not int or \
        type(furnishing) is not bool \
        or type(address) is not str or type(price) is not int or \
        type(id) is not int:
-        return False
+        return json.dumps({"error": True, "message": "Wrong data format!"})
 
-    return True
+    status, data = check_auth_token(token)
+
+    if status is False or data["type"] == "user":
+        return json.dumps({"error": True,
+                           "message": "User does not have authorization!"})
+
+    update_data = PropertyModel.query.filter(PropertyModel.id == id).first()
+
+    if update_data is None:
+        return json.dumps({"error": True,
+                           "message": "Property does not exist!"})
+    else:
+        amenities = ",".join(amenities)
+
+        update_data.area = area
+        update_data.amenities = amenities
+        update_data.bedrooms = bedrooms
+        update_data.furnishing = furnishing
+        update_data.address = address
+        update_data.price = price
+        db.session.commit()
+
+        return json.dumps({"error": False,
+                           "message": "Property updated successfully!"})
