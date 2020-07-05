@@ -1,8 +1,9 @@
-from ..models import db, UserModel
+from ..models import db, UserModel, RentModel
 import json
 import jwt
 from instance.config import SECRET_KEY
 import datetime
+from ..util.auth_token import check_auth_token
 
 
 def register(details):
@@ -67,16 +68,42 @@ def login(details):
     return json.dumps({"error": True, "message": "Unknown error!"})
 
 
-def rent(details):
+def rent(details, token):
     try:
         property_id = details["property_id"]
         time = details["time"]
         duration = details["duration"]
     except KeyError:
-        return False
+        return json.dumps({"error": True,
+                           "message": "One or more fields are missing!"})
+
+    if property_id == "" or time == "" \
+       or duration == "":
+        return json.dumps({"error": True, "message": "Empty Fields"})
 
     if type(property_id) is not int or type(time) is not str or \
        type(duration) is not int:
-        return False
+        return json.dumps({"error": True, "message": "Wrong data format!"})
 
-    return True
+    status, data = check_auth_token(token)
+
+    if status is False:
+        return json.dumps({"error": True,
+                           "message": "Token has expired!"})
+
+    user_data = UserModel.query.filter(UserModel.email
+                                       == data["email"]).first()
+
+    if user_data is not None:
+        user_id = user_data.id
+
+        data = RentModel(user_id=user_id, property_id=property_id,
+                         booking_time=time, duration=duration)
+        db.session.add(data)
+        db.session.commit()
+
+        return json.dumps({"error": False,
+                           "message": "Property rented successfully!"})
+
+    else:
+        return json.dumps({"error": True, "message": "Email does not exists"})
