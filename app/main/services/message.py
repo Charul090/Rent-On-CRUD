@@ -48,3 +48,19 @@ def get_message(details):
     }
 
     return json.dumps(data)
+
+
+def send_message(details):
+    try:
+        ancestor = details["ancestor"]
+        descendnt = details["descendnt"]
+    except KeyError:
+        return False
+
+    if type(ancestor) == "" or type(descendnt) == "":
+        return False
+
+    if type(ancestor) is not int or type(descendnt) is not int:
+        return False
+
+    return True
