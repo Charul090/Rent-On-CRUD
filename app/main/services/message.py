@@ -52,15 +52,17 @@ def get_message(details):
 
 def send_message(details):
     try:
-        ancestor = details["ancestor"]
-        descendnt = details["descendnt"]
+        sender_id = details["sender_id"]
+        receiver_id = details["receiver_id"]
+        message = details["message"]
     except KeyError:
         return False
 
-    if type(ancestor) == "" or type(descendnt) == "":
+    if sender_id == "" or receiver_id == "" or message == "":
         return False
 
-    if type(ancestor) is not int or type(descendnt) is not int:
+    if type(sender_id) is not int or type(receiver_id) is \
+    not int or type(message) is not str:
         return False
 
     return True
