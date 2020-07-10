@@ -4,6 +4,7 @@ import jwt
 from instance.config import SECRET_KEY
 import datetime
 from ..util.auth_token import check_auth_token
+from sqlalchemy import and_
 
 
 def get_message(details):
@@ -52,17 +53,53 @@ def get_message(details):
 
 def send_message(details):
     try:
-        sender_id = details["sender_id"]
-        receiver_id = details["receiver_id"]
+        sender_id = details["sender"]
+        receiver_id = details["receiver"]
         message = details["message"]
     except KeyError:
-        return False
+        return json.dumps({"error": True,
+                           "message": "One or more fields are missing!"})
 
     if sender_id == "" or receiver_id == "" or message == "":
-        return False
+        return json.dumps({"error": True, "message": "Empty Params"})
 
     if type(sender_id) is not int or type(receiver_id) is \
     not int or type(message) is not str:
-        return False
+        return json.dumps({"error": True, "message": "Wrong params format!"})
 
-    return True
+    enter_data_message = MessageModel(
+                         message=message, sender_id=sender_id,
+                         receiver_id=receiver_id)
+
+    db.session.add(enter_data_message)
+    db.session.commit()
+
+    previous_id_fetch = MessageModel.query.filter(
+                        and_(MessageModel.sender_id.in_(
+                        [sender_id, receiver_id]),
+                        MessageModel.receiver_id.in_(
+                        [sender_id, receiver_id])))
+
+    previous_id = []
+
+    for z in previous_id_fetch:
+        previous_id.append(z.id)
+
+    anc = 0
+    des = 0
+
+    if len(previous_id) == 1:
+        anc = int(previous_id[0])
+        des = int(previous_id[0])
+    else:
+        anc = int(previous_id[-2])
+        des = int(previous_id[-1])
+
+    enter_data_closure = ClosureModel(
+                         ancestor=anc,
+                         descendant=des)
+
+    db.session.add(enter_data_closure)
+    db.session.commit()
+
+    return json.dumps({"error": False, "message": "Message recorded"})

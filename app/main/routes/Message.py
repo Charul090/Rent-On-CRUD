@@ -1,9 +1,10 @@
 from . import message
 from flask import request
 from ..services.message import get_message
+from ..services.message import send_message
 
 
-@message.route("/get")
+@message.route("/get", methods=["POST"])
 def getMessage():
 
     data = {
@@ -12,5 +13,13 @@ def getMessage():
     }
 
     response = get_message(data)
+
+    return response
+
+
+@message.route("/send", methods=["POST"])
+def sendMessage():
+    
+    response = send_message(request.json)
 
     return response
