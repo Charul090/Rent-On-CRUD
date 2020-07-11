@@ -4,7 +4,7 @@ from ..services.message import get_message
 from ..services.message import send_message
 
 
-@message.route("/get", methods=["POST"])
+@message.route("/get")
 def getMessage():
 
     data = {

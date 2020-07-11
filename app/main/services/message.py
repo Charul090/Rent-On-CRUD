@@ -102,4 +102,11 @@ def send_message(details):
     db.session.add(enter_data_closure)
     db.session.commit()
 
+    enter_data_closure = ClosureModel(
+                         ancestor=des,
+                         descendant=des)
+
+    db.session.add(enter_data_closure)
+    db.session.commit()
+
     return json.dumps({"error": False, "message": "Message recorded"})

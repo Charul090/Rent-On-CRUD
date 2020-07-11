@@ -6,3 +6,4 @@ class ClosureModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ancestor = db.Column(db.Integer, db.ForeignKey("message.id"))
     descendant = db.Column(db.Integer, db.ForeignKey("message.id"))
+     
